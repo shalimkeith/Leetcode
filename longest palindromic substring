@@ -1,0 +1,28 @@
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        if not s:
+            return ""
+        
+        start = 0
+        max_len = 0
+        
+        def expand(left: int, right: int) -> int:
+            while left >= 0 and right < len(s) and s[left] == s[right]:
+                left -= 1
+                right += 1
+            # Returns the length of the valid palindrome found
+            return right - left - 1
+
+        for i in range(len(s)):
+            # Case 1: Odd length palindromes (e.g., "aba", center is 'b')
+            len1 = expand(i, i)
+            # Case 2: Even length palindromes (e.g., "abba", center is between 'b' and 'b')
+            len2 = expand(i, i + 1)
+            
+            curr_len = max(len1, len2)
+            if curr_len > max_len:
+                max_len = curr_len
+                # Calculate the correct starting index for the slice
+                start = i - (curr_len - 1) // 2
+
+        return s[start:start + max_len]
